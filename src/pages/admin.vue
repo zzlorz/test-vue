@@ -131,7 +131,7 @@ export default {
   },
   created () {
     console.log(document.cookie)
-    this.getData()
+    // this.getData()
   },
   mounted () {
   },

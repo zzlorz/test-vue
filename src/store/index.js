@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const s = {
   state: {
-    token: '',
+    token: process.env.SUPABASE_KEY,
     leftbarTrigger: true,
     leftbarCount: 0,
     leftbarData: {},
@@ -57,7 +57,7 @@ const s = {
     windowChange (state, payload) {
       state.windowChange = payload
     },
-    setWindowInfo ( state, payload ) {
+    setWindowInfo (state, payload) {
       state.windowInfo = payload
     },
     taskimg (state, payload) {

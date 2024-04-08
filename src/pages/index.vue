@@ -21,7 +21,7 @@
                 <el-carousel indicator-position="outside" style="width: 100%;" :interval="4000" @change="changeSwiper">
                   <el-carousel-item v-for="(item, index) in swiperData" :key="index+'s'">
                     <div class="transform" style="flex: 10;" ref="big">
-                      <img :src="imgPrefix+item.theme_cover" :ref="'swiper'+index" @click="showDetail(index)" style="object-fit: cover" crossOrigin="anonymous" :style="{width: '100%', height: '300px'}">
+                      <img :src="imgPrefix1+item.theme_cover" :ref="'swiper'+index" @click="showDetail(index)" style="object-fit: cover" crossOrigin="anonymous" :style="{width: '100%', height: '300px'}">
                       <div class="theme_title">
                         <div>{{item.theme_title}}</div>
                         <p><el-icon class="el-icon-location-information"></el-icon> {{item.theme_position}}</p>
@@ -42,7 +42,7 @@
                   <el-col v-for="(item, index) in imgList" :span="12" :key="item.index">
                     <div class="div" ref="div">
                       <div style="margin: 10px;" :class="{'img-style div-img':true}">
-                        <el-image @click="showDetail(index)" :src="imgPrefix+item.theme_cover" fit="cover" :style="{width: '100%', height: '200px'}"></el-image>
+                        <el-image @click="showDetail(index)" :src="imgPrefix1+item.theme_cover" fit="cover" :style="{width: '100%', height: '200px'}"></el-image>
                         <div style="padding:10px 20px;">
                           <p class="item-theme-desc">{{item.theme_title}}</p>
                           <p style="font-size: 12px;color: #999;display: flex;justify-content: space-between;margin-top: 10px;">
@@ -139,6 +139,7 @@
 import Indextem from '@/components/indexTem.vue'
 import RemarkImg from '@/components/fullremarkImg.vue'
 import {getIndexList} from '@/api/index.js'
+import supabase from '@/utils/supabaseQuery'
 
 export default {
   name: 'home',
@@ -154,6 +155,7 @@ export default {
       erweima_wx: require('@/assets/img/erweima_wx.jpg'),
       erweima_qq: require('@/assets/img/erweima_qq.jpg'),
       imgPrefix: 'http://cdn.youlaji.com/',
+      imgPrefix1: 'https://dxzmebuimxtfznmcdwht.supabase.co/storage/v1/object/public/',
       listQuery: {
         pages: 1,
         limit: 20
@@ -179,17 +181,18 @@ export default {
   computed: {
   },
   created () {
-    getIndexList(this.listQuery).then(res => {
-      this.imgList = res.data
-      let reverseData = res.data.reverse()
-      this.swiperData = [reverseData[0], reverseData[1], reverseData[2]]
-      this.item = res.data[0]
-      this.$nextTick(() => {
-        this.listHeight = (this.$refs.getListDomHeight.offsetHeight) - 60 + 'px'
-        this.scaleHeight = parseInt(this.scale * this.$refs.div[0].offsetWidth) + 'px'
-        this.scaleBigHeight = parseInt(this.scaleBig * this.$refs.big.offsetWidth - 16)
-      })
-    })
+    this.getTodos()
+    // getIndexList(this.listQuery).then(res => {
+    //   this.imgList = res.data
+    //   let reverseData = res.data.reverse()
+    //   this.swiperData = [reverseData[0], reverseData[1], reverseData[2]]
+    //   this.item = res.data[0]
+    //   this.$nextTick(() => {
+    //     this.listHeight = (this.$refs.getListDomHeight.offsetHeight) - 60 + 'px'
+    //     this.scaleHeight = parseInt(this.scale * this.$refs.div[0].offsetWidth) + 'px'
+    //     this.scaleBigHeight = parseInt(this.scaleBig * this.$refs.big.offsetWidth - 16)
+    //   })
+    // })
   },
   mounted () {
     const that = this
@@ -206,10 +209,25 @@ export default {
     }
   },
   methods: {
+    async getTodos () {
+      console.log(this.$store)
+      const { data: todos, error } = await supabase.from('youlaji_blog_test').select('*')
+      this.imgList = todos
+      let reverseData = todos.reverse()
+      this.swiperData = [reverseData[0], reverseData[1], reverseData[2]]
+      this.item = todos[0]
+      this.$nextTick(() => {
+        this.listHeight = (this.$refs.getListDomHeight.offsetHeight) - 60 + 'px'
+        this.scaleHeight = parseInt(this.scale * this.$refs.div[0].offsetWidth) + 'px'
+        this.scaleBigHeight = parseInt(this.scaleBig * this.$refs.big.offsetWidth - 16)
+      })
+      console.log(error)
+      console.log(todos)
+    },
     changeSwiper (item) {
-      setTimeout(() => {
-        this.borderBg = this.getAverageRGB(this.$refs['swiper' + item][0])
-      }, 200)
+      // setTimeout(() => {
+      //   this.borderBg = this.getAverageRGB(this.$refs['swiper' + item][0])
+      // }, 200)
     },
     showbar (index) {
       this.showbarStatus = true
