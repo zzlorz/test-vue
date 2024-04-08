@@ -5,8 +5,6 @@
         <div class="photo-list-title">PHOTOS</div>
         <ul  v-viewer>
           <li><img src="../../static/p1.jpg" @click="show" width="100%" height="100%"></li>
-          <li><img src="../../static/p2.jpg" width="100%" height="100%"></li>
-          <li><img src="../../static/p2.jpg" width="100%" height="100%"></li>
           <li><img src="../../static/p1.jpg" width="100%" height="100%"></li>
         </ul>
     </div>
