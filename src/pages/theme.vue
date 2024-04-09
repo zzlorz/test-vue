@@ -97,6 +97,7 @@
 
 <script>
 import cityData from '@/assets/cityData.js'
+import supabase from '@/utils/supabaseQuery'
 import {getItem, postItem, putItem} from '@/api/theme.js'
 import {postPhoto, deletePhoto} from '@/api/photo.js'
 import {parseTime} from '@/utils/parseTime.js'
@@ -180,7 +181,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route.params)
     window.addEventListener('scroll', () => {
       let top = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset
       if (top > 350) {
@@ -296,17 +296,21 @@ export default {
     displayData (data) {
       data.theme_position = data.theme_position.split(' ')
       data.theme_date = parseTime(new Date(data.theme_date), '{y}-{m}-{d} {h}:{i}:{s}')
-      data.photo_ids = data.photo_ids.map(item => {
-        return item
-      })
+      data.photo_ids = data.photo_ids ? data.photo_ids.split(',') : []
+      // data.photo_ids = data.photo_ids.map(item => {
+      //   return item
+      // })
       return data
     },
-    getData (id) {
+    async getData (id) {
       this.loading = true
-      getItem({id: id}).then(data => {
-        this.form = this.displayData(data.data)
-        this.loading = false
-      })
+      const { data: todos, error } = await supabase.from('youlaji_blog_test').select('*').eq('theme_id', id)
+      this.form = this.displayData(todos[0])
+      this.loading = false
+      // getItem({id: id}).then(data => {
+      //   this.form = this.displayData(data.data)
+      //   this.loading = false
+      // })
     },
     delPhoto (unUsedUrl, usedUrl) {
       if (unUsedUrl && unUsedUrl.length > 0) {

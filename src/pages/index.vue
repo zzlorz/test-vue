@@ -155,7 +155,7 @@ export default {
       erweima_wx: require('@/assets/img/erweima_wx.jpg'),
       erweima_qq: require('@/assets/img/erweima_qq.jpg'),
       imgPrefix: 'http://cdn.youlaji.com/',
-      imgPrefix1: 'https://dxzmebuimxtfznmcdwht.supabase.co/storage/v1/object/public/',
+      imgPrefix1: 'https://dxzmebuimxtfznmcdwht.supabase.co/storage/v1/object/public/imgs/',
       listQuery: {
         pages: 1,
         limit: 20

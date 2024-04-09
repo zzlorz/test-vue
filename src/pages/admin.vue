@@ -66,6 +66,7 @@
 import {getThemeList} from '@/api/admin.js'
 import {deleteItem} from '@/api/theme.js'
 import {parseTime} from '@/utils/parseTime.js'
+import supabase from '@/utils/supabaseQuery'
 export default {
   name: 'admin',
   components: {
@@ -131,7 +132,7 @@ export default {
   },
   created () {
     console.log(document.cookie)
-    // this.getData()
+    this.getData()
   },
   mounted () {
   },
@@ -143,13 +144,17 @@ export default {
     command (value) {
       console.log(value)
     },
-    getData () {
+    async getData () {
       this.loading = true
-      getThemeList(this.listQuery).then(res => {
-        this.list = res.data
-        this.total = res.total
-        this.loading = false
-      })
+      const { data: todos } = await supabase.from('youlaji_blog_test').select('*')
+      this.list = todos
+      this.total = todos.length
+      this.loading = false
+      // getThemeList(this.listQuery).then(res => {
+      //   this.list = res.data
+      //   this.total = res.total
+      //   this.loading = false
+      // })
     },
     add () {
       this.$router.push('/admin/theme/add/')
