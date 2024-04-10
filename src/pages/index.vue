@@ -8,7 +8,7 @@
           <div style="max-width: 940px;margin: 0 auto;">
             <div style="padding: 0 10px;display: flex;align-items: center">
               <!-- <a href="/"><img style="border-radius: 8px;" :src="imgPrefix+'logo_youlaji.png'"/></a> -->
-              <a href="/"><img style="border-radius: 8px;" :src="headerClass?studentImgSm:studentImg"/></a>
+              <a href="/"><img style="border-radius: 8px;height: 100%;" :src="headerClass?studentImgSm:studentImg"/></a>
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
                 </el-carousel>
               </div>
               <div style="padding: 10px;">
-                <div style="font-size:18px;font-weight: bold;color: #666;">所有日记</div>
+                <div style="font-size:18px;font-weight: bold;color: #646A58;">所有日记</div>
                 <el-divider></el-divider>
               </div>
               <div class="m-photo-item-list">
@@ -42,9 +42,9 @@
                   <el-col v-for="(item, index) in imgList" :span="12" :key="item.index">
                     <div class="div" ref="div">
                       <div style="margin: 10px;" :class="{'img-style div-img':true}">
-                        <el-image @click="showDetail(index)" :src="imgPrefix1+item.theme_cover" fit="cover" :style="{width: '100%', height: '200px'}"></el-image>
+                        <el-image @click="showDetail(index)" :src="imgPrefix+item.theme_cover" fit="cover" :style="{width: '100%', height: '200px'}"></el-image>
                         <div style="padding:10px 20px;">
-                          <p class="item-theme-desc">{{item.theme_title}}</p>
+                          <p class="item-theme-desc" :title="item.theme_title">{{item.theme_title}}</p>
                           <p style="font-size: 12px;color: #999;display: flex;justify-content: space-between;margin-top: 10px;">
                             <span style="line-height: 28px;"><el-icon class="el-icon-location-information"></el-icon> {{item.theme_position}}</span>
                             <el-button type="info" size="mini" icon="el-icon-view" circle plain @click="showbar(index)"></el-button>
@@ -59,9 +59,9 @@
           </div>
           <div class="info">
             <div class="turn" style="width: 70px;height:70px;overflow: hidden;margin: 0 auto;border-radius: 50px;" :style="{'border': '10px solid '+borderBg}">
-              <el-image style="width: 100%;height: 100%;" fit="cover" :src="imgPrefix+'avatar_ylj.jpg'"></el-image>
+              <el-image style="width: 100%;height: 100%;" fit="cover" :src="imgPrefix1+'old/avatar.jpg'"></el-image>
             </div>
-            <h3 style="text-align: center;margin: 20px 0;"><img :src="imgPrefix+'art_leilei.png'"/></h3>
+            <h3 style="text-align: center;margin: 20px 0;"><img :src="imgPrefix1+'old/art_leilei.png'"/></h3>
             <div style="font-size: 14px;width: 220px;margin: 0 auto;">
               <p style="text-align:right;line-height: 50px;">一寸光阴一寸金，寸金难买寸光阴</p>
               <p style="text-align:right;">—— 谚语</p>
@@ -112,7 +112,7 @@
         <div>
           <div class="beian" style="text-align: center;font-size: 14px;color: #666;"><a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备 17016370号 - 3</a></div>
         </div>
-        <div :class="{'show-bar': showbarStatus, 'm-info': true}" style="overflow: auto;">
+        <div :class="{'show-bar': showbarStatus, 'm-info': true}" :style="{'overflow': 'auto','top': (headerClass?'45px':'95px')}">
           <div>
             <el-button icon="el-icon-close" size="small" type="info" circle @click="hidebar"></el-button>
             <el-popover
@@ -150,8 +150,8 @@ export default {
   data () {
     return {
       swiperData: [],
-      studentImg: require('@/assets/img/logo_ylj.jpg'),
-      studentImgSm: require('@/assets/img/logo_ylj_sm.jpg'),
+      studentImg: require('@/assets/img/logo_ylj.svg'),
+      studentImgSm: require('@/assets/img/logo_ylj_sm.svg'),
       erweima_wx: require('@/assets/img/erweima_wx.jpg'),
       erweima_qq: require('@/assets/img/erweima_qq.jpg'),
       imgPrefix: 'http://cdn.youlaji.com/',
@@ -345,7 +345,7 @@ body{
   display: flex;
   flex-wrap: nowrap;
   height: 95px;
-  border-bottom: 1px solid #e7e8ea;
+  border-bottom: 1px solid #f5f5f5;
   justify-content: flex-start;
   align-items:center;
   box-sizing: border-box;
@@ -379,11 +379,10 @@ body{
 .item-theme-desc{
   overflow: hidden;
   text-overflow:ellipsis;
-  display:-webkit-box;
-  -webkit-box-orient:vertical;
-  -webkit-line-clamp:3;
+  white-space: nowrap;
   font-size: 14px;
   line-height: 20px;
+  height: 20px;
   text-align:justify;
   color: #666;
 }
@@ -400,7 +399,7 @@ body{
   float: left;
   margin: 0 auto;
   box-sizing: border-box;
-  border-right: 1px solid #e7e8ea;
+  border-right: 1px solid #f5f5f5;
   padding-right: 10px;
   padding-top: 120px;
 }
@@ -409,6 +408,7 @@ body{
   float:left;
   margin-left: 16px;
   padding-top: 120px;
+  color: #646A58;
 }
 .transform{
   overflow: hidden;
@@ -446,8 +446,9 @@ body{
   /* background: #fff; */
   background: #F9FAFC;
   transition: all ease-in 0.3s;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-  z-index: 9;
+  /* box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); */
+  border-left: 1px solid #f5f5f5;
+  z-index: 99;
 }
 .show-bar{
   right: 0;
@@ -510,7 +511,7 @@ body{
     position: absolute;
     left: 0;
     bottom: 0;
-    background-color: #494949;
+    background-color: #646A58;
     height: 4px;
     width: 20px;
     border-radius: 2px;
