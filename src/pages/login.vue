@@ -16,7 +16,7 @@
             <i class="el-icon-lock"></i>
             <el-input type="text" style="border: 0 !important;" class="pass" placeholder="密码" v-model="login.password" @keyup.enter.native="loginFn"></el-input>
           </div>
-          <input type="file" @change="uploadFile">
+          <!-- <input type="file" @change="uploadFile"> -->
           <div>
             <el-button type="primary" style="width:100%;margin-bottom:30px;" @click="loginFn" @keyup.enter.native='loginFn'>登录</el-button>
           </div>
@@ -53,13 +53,15 @@ export default {
         this.$message.warning('输入登录密码')
         return
       }
-      const { data: todos } = await supabase.from('user').select('*').eq('name', this.login.name).eq('pw', this.login.password)
-      const { data: todos1 } = await supabase.storage.from('imgs')
-      console.log(todos1)
-      if (todos.length > 0) {
-        this.$store.commit('token', 'process.env.SUPABASE_KEY')
-        this.$router.push({path: '/admin'})
-      }
+      let { data, error } = await supabase.auth.signInWithPassword({
+        email: this.login.name,
+        password: this.login.password
+      })
+      console.log(data)
+      // if (todos.length > 0) {
+      //   this.$store.commit('token', 'process.env.SUPABASE_KEY')
+      //   this.$router.push({path: '/admin'})
+      // }
       // this.$http({url: '/login', method: 'post', data: this.login}).then(res => {
       //   if (res.errcode === 0) {
       //     this.$store.commit('token', res.data.token)

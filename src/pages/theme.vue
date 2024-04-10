@@ -19,7 +19,7 @@
             <div class="m-photo-edit" ref="getListDomHeight">
                 <div id="editor">
                   <div class="cover-img">
-                    <img :src="imgPrefix+form.theme_cover" v-show="form.theme_cover" alt="">
+                    <img :src="imgPrefix1+form.theme_cover" v-show="form.theme_cover" alt="">
                     <div class="cover-img-tool" v-show="form.theme_cover">
                       <el-upload
                         class="upload-demo"
@@ -123,6 +123,7 @@ export default {
         ['clean'] // 清楚格式（所谓去掉背景色这些花里胡巧）
       ],
       imgPrefix: 'http://cdn.youlaji.com/',
+      imgPrefix1: 'https://dxzmebuimxtfznmcdwht.supabase.co/storage/v1/object/public/imgs/',
       useCustomImageHandler: true,
       cityData: cityData(),
       rules: {
@@ -300,11 +301,12 @@ export default {
       // data.photo_ids = data.photo_ids.map(item => {
       //   return item
       // })
+      console.log(data)
       return data
     },
     async getData (id) {
       this.loading = true
-      const { data: todos, error } = await supabase.from('youlaji_blog_test').select('*').eq('theme_id', id)
+      const { data: todos } = await supabase.from('youlaji_blog_test').select('*').eq('theme_id', id)
       this.form = this.displayData(todos[0])
       this.loading = false
       // getItem({id: id}).then(data => {
@@ -343,23 +345,40 @@ export default {
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
-    onSubmit () {
+    async onSubmit () {
       const self = this
       if (!this.form.theme_title) {
         this.form.theme_title = '空'
       }
+      this.$notify({
+        title: '提示',
+        message: '暂时无法保存',
+        type: 'error',
+        duration: 1000,
+        onClose () {
+          self.disabled = true
+          self.loading = false
+        }
+      })
+      return
       if (this.form.theme_id) {
-        putItem(this.formatData()).then(data => {
-          this.$notify({
-            title: '成功',
-            message: '修改成功',
-            type: 'success',
-            duration: 1000,
-            onClose () {
-              self.loading = false
-            }
-          })
-        })
+        const { data, error } = await supabase
+          .from('youlaji_blog_test')
+          .update(this.formatData())
+          .eq('theme_id', this.form.theme_id)
+          .select()
+
+        // putItem(this.formatData()).then(data => {
+        //   this.$notify({
+        //     title: '成功',
+        //     message: '修改成功',
+        //     type: 'success',
+        //     duration: 1000,
+        //     onClose () {
+        //       self.loading = false
+        //     }
+        //   })
+        // })
       } else {
         let addData = this.formatData()
         delete addData.theme_id

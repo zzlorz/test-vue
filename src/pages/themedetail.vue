@@ -11,7 +11,7 @@
         <div style="max-width: 1000px;height: 300px;text-align: center;margin: 0 auto;overflow: hidden;position:relative;">
           <!-- <div style="height: 100%;width: 20%;position: absolute;left: 0;" :style="{'background': '-webkit-linear-gradient(left , '+coverBg+', transparent)'}"></div>
           <div style="height: 100%;width: 20%;position: absolute;right: 0;" :style="{'background': '-webkit-linear-gradient(right , '+coverBg+', transparent)'}"></div> -->
-          <img :src="imgPrefix + form.theme_cover" style="height: 100%; width: 100%;object-fit: cover;" alt="" ref="cover" crossOrigin="anonymous">
+          <img :src="imgPrefix1 + form.theme_cover" style="height: 100%; width: 100%;object-fit: cover;" alt="" ref="cover" crossOrigin="anonymous">
         </div>
       </div>
       <div class="img-div">
@@ -33,6 +33,7 @@
 import {getItemDetail} from '@/api/index.js'
 import {parseTime} from '@/utils/parseTime.js'
 import 'quill/dist/quill.snow.css'
+import supabase from '@/utils/supabaseQuery'
 export default {
   data () {
     return {
@@ -40,6 +41,7 @@ export default {
       studentImgSm: require('@/assets/img/logo_ylj_sm.jpg'),
       headerClass: false,
       imgPrefix: 'http://cdn.youlaji.com/',
+      imgPrefix1: 'https://dxzmebuimxtfznmcdwht.supabase.co/storage/v1/object/public/imgs/',
       form: {},
       coverBg: ''
     }
@@ -50,7 +52,7 @@ export default {
     if (this.$route.params.id) {
       this.disabled = true
       this.form.theme_id = this.$route.params.id
-      this.getData(this.$route.params.id)
+      this.getDetail(this.$route.params.id)
     } else {
       this.disabled = false
       this.loading = false
@@ -70,11 +72,20 @@ export default {
     displayData (data) {
       data.theme_position = data.theme_position.split(' ')
       data.theme_date = parseTime(new Date(data.theme_date), '{y}-{m}-{d} {h}:{i}:{s}')
-      data.photo_ids = data.photo_ids.map(item => {
-        item.cover = (item.url === data.theme_cover)
-        return item
-      })
+      // data.photo_ids = data.photo_ids.map(item => {
+      //   item.cover = (item.url === data.theme_cover)
+      //   return item
+      // })
       return data
+    },
+    async getDetail (id) {
+      this.loading = true
+      const { data: todos } = await supabase.from('youlaji_blog_test').select('*').eq('theme_id', id)
+      this.form = this.displayData(todos[0])
+      this.loading = false
+      this.$refs.cover.onload = () => {
+        this.coverBg = this.getAverageRGB(this.$refs.cover)
+      }
     },
     getData (id) {
       this.loading = true

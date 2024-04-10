@@ -42,7 +42,7 @@
                   <el-col v-for="(item, index) in imgList" :span="12" :key="item.index">
                     <div class="div" ref="div">
                       <div style="margin: 10px;" :class="{'img-style div-img':true}">
-                        <el-image @click="showDetail(index)" :src="imgPrefix+item.theme_cover" fit="cover" :style="{width: '100%', height: '200px'}"></el-image>
+                        <el-image @click="showDetail(index)" :src="imgPrefix1+item.theme_cover" fit="cover" :style="{width: '100%', height: '200px'}"></el-image>
                         <div style="padding:10px 20px;">
                           <p class="item-theme-desc" :title="item.theme_title">{{item.theme_title}}</p>
                           <p style="font-size: 12px;color: #999;display: flex;justify-content: space-between;margin-top: 10px;">
