@@ -18,21 +18,11 @@
         </div>
       </div>
       <div class="m-content">
-        <div class="m-info">
-          <div>
-            <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              accordion
-              @node-click="handleNodeClick">
-            </el-tree>
-          </div>
-        </div>
         <div class="m-photo" ref="getListDomHeight" v-loading="loading">
           <div class="theme">
             <div class="theme-item" v-for="(o, index) in list" :key="index+'o'">
               <el-card :body-style="{ padding: '0px',textAlign: 'center' }">
-                <el-image :src="imgPrefix+o.theme_cover" class="image" fit="cover" style="height: 200px;width: 100%;"></el-image>
+                <el-image :src="imgPrefix1+o.theme_cover" class="image" fit="cover" style="height: 200px;width: 100%;"></el-image>
                 <div style="padding: 14px;">
                   <h4 class="photo-title">{{o.theme_title}}</h4>
                   <div class="bottom clearfix">
@@ -79,6 +69,7 @@ export default {
   data () {
     return {
       imgPrefix: 'http://cdn.youlaji.com/',
+      imgPrefix1: 'https://dxzmebuimxtfznmcdwht.supabase.co/storage/v1/object/public/imgs/',
       currentDate: new Date(),
       listQuery: {
         pages: 1,
