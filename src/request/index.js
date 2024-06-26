@@ -12,12 +12,13 @@ const instance = axios.create({
 // POST传参序列化(添加请求拦截器)
 // 在发送请求之前做某件事
 instance.interceptors.request.use(config => {
+  console.log(config)
   // 设置以 form 表单的形式提交参数，如果以 JSON 的形式提交表单，可忽略
   // if (config.method === 'post') {
   //   config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
   // }
   // 下面会说在什么时候存储 token
-  let token = Cookies.get('token') || Cookies.get('Token')
+  let token = Cookies.get('token')
   if (token) {
     config.headers.Authorization = token
     config.headers.Accept = 'application/json'
@@ -41,6 +42,7 @@ instance.interceptors.response.use((response) => {
     Cookies.set('token', token)
     // store.commit('token', token)
   }
+  console.log(response)
   return response.data
 }, (error) => {
   if (error.response) {

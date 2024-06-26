@@ -28,7 +28,7 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   const data = response.data
-  if (data.code !== 0) {
+  if (data.errcode !== 0) {
     Message({
       message: data.msg || 'Error',
       type: 'error',

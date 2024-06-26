@@ -14,7 +14,7 @@
           </div>
           <div class="input-box">
             <i class="el-icon-lock"></i>
-            <el-input type="text" style="border: 0 !important;" class="pass" placeholder="密码" v-model="login.password" @keyup.enter.native="loginFn"></el-input>
+            <el-input type="text" style="border: 0 !important;" class="pass" placeholder="密码" v-model="login.pw" @keyup.enter.native="loginFn"></el-input>
           </div>
           <!-- <input type="file" @change="uploadFile"> -->
           <div>
@@ -33,13 +33,14 @@
 <script>
 
 import supabase from '@/utils/supabaseQuery'
+import { login } from '@/api/login'
 export default {
   name: 'login',
   data () {
     return {
       login: {
         name: '',
-        password: ''
+        pw: ''
       },
       src: 'data:image/jpeg;base64,eyJlcnJjb2RlIjo0MDE2OSwiZXJybXNnIjoiaW52YWxpZCBsZW5ndGggZm9yIHNjZW5lLCBvciB0aGUgZGF0YSBpcyBub3QganNvbiBzdHJpbmcgaGludDogW2ZHcERNYk1yZS13TjQ0U2FdIHJpZDogNWY0Yzk0YTctMjUyOTk1Y2ItMGQyYzdhZmQifQ=='
     }
@@ -49,35 +50,26 @@ export default {
       if (this.login.name === '') {
         this.$message.warning('输入用户名')
         return
-      } else if (this.login.password === '') {
+      } else if (this.login.pw === '') {
         this.$message.warning('输入登录密码')
         return
       }
-      let { data, error } = await supabase.auth.signInWithPassword({
-        email: this.login.name,
-        password: this.login.password
+      this.$http({url: `https://api.youlaji.com/v1/login?name=${this.login.name}&pw=${this.login.pw}`, method: 'get'}).then(res => {
+        if (res.errcode === 0) {
+          this.$store.commit('token', res.data.token)
+          this.$store.commit('setUserInfo', res.data)
+          this.Cookies.set('token', res.data.token, {expires: 1 / 24})
+          this.$router.push({path: '/admin'})
+        } else {
+          this.Cookies.remove('token')
+          this.$store.commit('token', '')
+          this.$store.commit('setUserInfo', {})
+          this.$message.error(res.data.msg)
+        }
+        // 跳转到指定页面
+        // _this.$router.go(-1);
+        // 往回跳
       })
-      console.log(data)
-      // if (todos.length > 0) {
-      //   this.$store.commit('token', 'process.env.SUPABASE_KEY')
-      //   this.$router.push({path: '/admin'})
-      // }
-      // this.$http({url: '/login', method: 'post', data: this.login}).then(res => {
-      //   if (res.errcode === 0) {
-      //     this.$store.commit('token', res.data.token)
-      //     this.$store.commit('setUserInfo', res.data)
-      //     this.Cookies.set('Token', res.data.token, {expires: 1 / 24})
-      //     this.$router.push({path: '/admin'})
-      //   } else {
-      //     this.Cookies.remove('Token')
-      //     this.$store.commit('Token', '')
-      //     this.$store.commit('setUserInfo', {})
-      //     this.$message.error(res.data.msg)
-      //   }
-      //   // 跳转到指定页面
-      //   // _this.$router.go(-1);
-      //   // 往回跳
-      // })
     },
     async uploadFile (file) {
       console.log(file.target.files)

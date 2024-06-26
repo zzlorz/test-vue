@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const s = {
   state: {
-    token: process.env.SUPABASE_KEY,
+    token: '',
     leftbarTrigger: true,
     leftbarCount: 0,
     leftbarData: {},

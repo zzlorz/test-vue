@@ -84,7 +84,9 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    if (store.state.token || Cookies.get('token') || Cookies.get('Token')) {
+    console.log(store.state.token)
+    console.log(Cookies.get('token'))
+    if (store.state.token || Cookies.get('token')) {
       next()
     } else {
       next('/login')
